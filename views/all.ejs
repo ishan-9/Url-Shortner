@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AllUrls</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            vertical-align: middle;
+            word-wrap: break-word;
+        }
+        th {
+            background-color: #348ea3;
+            color: white;
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        form {
+            margin: 0;
+        }
+        input[type="text"], button {
+            padding: 10px;
+            margin-top: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #348ea3;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background-color: #348ea3;
+        }
+        .form-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .user, .form-container {
+            display: flex;
+            justify-content: center;
+        }
+        .user button {
+            width: auto;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>All Urls</h1>
+    <% if (locals.id) { %>
+        <p>Url Generated: <a href="http://localhost:9000/url/<%= id %>">http://localhost:9000/url/<%= id %></a></p>
+    <% } %>
+
+    <div class="form-container">
+        <form method="POST" action="/url/create">
+            <label>Enter Your Original URL</label>
+            <input type="text" name="url" placeholder="https://example.com" />
+            <button type="submit">Generate</button>
+        </form>
+    </div>
+    <div>
+        <% if (locals.urls) { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th>S. No</th>
+                        <th>ShortID</th>
+                        <th>Redirect</th>
+                        <th>Clicks</th>
+                        <th>Created By</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% urls.forEach((url, index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= url.shortId %></td>
+                            <td><%= url.redirectUrl %></td>
+                            <td><%= url.visitHistory.length %></td>
+                            <td><%= url.createdBy.email %></td>
+                            <td>
+                                <form method="post" action="/url/delete/<%= url.shortId %>">
+                                    <button type="submit" >Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
+    <form class="user" method="get" action="/">
+        <button type="submit">Back</button>
+    </form>
+</body>
+</html>
